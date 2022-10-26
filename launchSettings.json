@@ -1,0 +1,17 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "webapplication2",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
+      "serviceActions": {
+        "webapplication2": "StartDebugging",
+        "broker": "StartWithoutDebugging",
+        "consoleappconsumer": "StartDebugging",
+        "zookeeper": "StartWithoutDebugging"
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: weathertest
+    namespace: kafka
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: weathertest
+    template:
+      metadata:
+        labels:
+          app: weathertest
+      spec:
+        nodeSelector:
+          kubernetes.io/os: linux
+        containers:
+          - name: weathertest
+            image: registryfordemo.azurecr.io/weathertest:latest
+            ports:
+              - containerPort: 80
+---
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: weathertest-service
+    namespace: kafka
+  spec:
+    type: LoadBalancer
+    ports:
+      - targetPort: 80
+        name: port80
+        port: 80
+        protocol: TCP
+    selector:
+      app: weathertest

@@ -1,0 +1,63 @@
+# producer deployment
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: webapplication2
+    namespace: kafka
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: webapplication2
+    template:
+      metadata:
+        labels:
+          app: webapplication2
+      spec:
+        nodeSelector:
+          kubernetes.io/os: linux
+        containers:
+          - name: webapplication2
+            image: registryfordemo.azurecr.io/webapplication2:latest
+            ports:
+              - containerPort: 80
+---
+# producer service
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: webapplication2-service
+    namespace: kafka
+  spec:
+    type: LoadBalancer
+    ports:
+      - targetPort: 80
+        name: port80
+        port: 80
+        protocol: TCP
+    selector:
+      app: webapplication2
+---
+# consumer deployment
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: consoleappconsumer
+    namespace: kafka
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: consoleappconsumer
+    template:
+      metadata:
+        labels:
+          app: consoleappconsumer
+      spec:
+        nodeSelector:
+          kubernetes.io/os: linux
+        containers:
+          - name: consoleappconsumer
+            image: registryfordemo.azurecr.io/consoleappconsumer:latest
+---
+# consumer service
