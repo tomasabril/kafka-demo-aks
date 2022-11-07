@@ -40,6 +40,18 @@ using (var consumer = new ConsumerBuilder<string, string>(config).Build())
 
                 // TODO: simulate processing of data and save to database
                 var message = JsonSerializer.Deserialize<KafkaMessage>(cr.Message.Value);
+
+                //
+                HttpClient client = new HttpClient();
+                var values = new Dictionary<string, string>
+                  {
+                      { "key", message.ImageURI != "" ? message.ImageURI : "no image" }
+                  };
+                var content = new FormUrlEncodedContent(values);
+                var a = JsonSerializer.Serialize(values);
+                var url = "https://prod-14.francecentral.logic.azure.com:443/workflows/affcdcb34d0546a39303ef523acdb438/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=hF_1w3Dye-_NP6nzm6HWYX5ZykVbQchxKGDzcyluCjI";
+                var response = await client.PostAsync(url, content);
+                //var responseString = await client.GetStringAsync();
             }
             catch (ConsumeException ce)
             {
